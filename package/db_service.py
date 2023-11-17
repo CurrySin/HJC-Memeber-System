@@ -9,7 +9,7 @@ class DB_Service:
     def batch_insert(db_path, sql, data):
         if DB.conn is None:
             DB.create_connectionn(db_path)
-        cursor_obj = DB.conn.cursor()
+        cursor_obj = DB_Service.get_cursor(DB.conn)
         cursor_obj.executemany(sql, data)
         DB.conn.commit()
 
@@ -49,3 +49,9 @@ class DB_Service:
         DB.conn.commit()
         result = True
         return result
+
+    @staticmethod
+    def get_cursor(db_conn):
+        cursor = db_conn.cursor()
+        # cursor.execute("PRAGMA key='hjcms@dev'")
+        return cursor

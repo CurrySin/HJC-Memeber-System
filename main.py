@@ -142,8 +142,10 @@ def read_db():
     sql_str = "SELECT * FROM member"
     member_list = []
     result_list = DB_Service.select_all(DB_path, sql_str)
-    for member in result_list:
-        member_list.append(Member.tupleTOdict(member))
+    print(f"len(result_list): {len(result_list)}")
+    if len(result_list) > 0:
+        for member in result_list:
+            member_list.append(Member.tupleTOdict(member))
     return member_list
 
 
@@ -166,7 +168,11 @@ def test():
     for idx, v in enumerate(result):
         print(f"idx: {idx} v: {v}")
         if idx != 0:
-            member_raw.append(v)
+            temp_list = list(v)
+            for o_idx, o_value in enumerate(temp_list):
+                temp_list[o_idx] = Util.encrypte_data(o_value)
+            new_obj = tuple(temp_list)
+            member_raw.append(new_obj)
 
     # db connection
     sql_str = "INSERT INTO MEMBER(hjc_id, first_name, last_name, email, gender, phone)VALUES(?, ?, ?, ?, ?, ?)"

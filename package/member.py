@@ -1,3 +1,6 @@
+from .util import Util
+
+
 class Member:
     keys = ["id", "hjc_id", "first_name",
             "last_name", "email", "gender", "phone"]
@@ -22,7 +25,10 @@ class Member:
 
     def setSelfKey(self, in_obj) -> None:
         for idx, key in enumerate(self.keys):
-            self[key] = in_obj[idx]
+            if idx == 0:
+                self[key] = in_obj[idx]
+            else:
+                self[key] = Util.decrypte_data(in_obj[idx])
 
     def toDict(self) -> dict:
         return self.property

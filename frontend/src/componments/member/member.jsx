@@ -18,7 +18,7 @@ import {
     Text,
     useDisclosure
 } from "@chakra-ui/react";
-import Table from "./Table";
+import MemberTable from "./memberTable";
 
 const TodosContext = React.createContext({
     todos: [], fetchTodos: () => {}
@@ -150,7 +150,7 @@ export default function Todos() {
     }, [])
     return (
       <TodosContext.Provider value={{todos, fetchTodos}}>
-        <Table data={todos} />
+        <MemberTable data={todos} />
       </TodosContext.Provider>
     )
 }

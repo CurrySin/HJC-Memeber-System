@@ -91,6 +91,14 @@ async def gen_test_excel_2() -> dict:
     }
 
 
+@app.post("/login", tags=["login"])
+async def login(user: dict):
+    print(user)
+    return {
+        "data": auth(user)
+    }
+
+
 @app.get("/", tags=["root"])
 async def read_root() -> dict:
     return "Welcome to HJC member system"
@@ -125,7 +133,7 @@ def gen_test_excel_to_folder_2():
 
 def select_by_id(id):
     sql_str = "SELECT * FROM member WHERE id=?"
-    result_list = DB_Service.select_by_id(DB_path, sql_str, id)
+    result_list = DB_Service.select_by_param(DB_path, sql_str, (id,))
     member_list = []
     for member in result_list:
         member_list.append(Member.tupleTOdict(member))
@@ -156,6 +164,24 @@ def update_db(obj):
     update_state = DB_Service.update(DB_path, sql_str, Member.dictTOtuple(obj)[::-1])
     if update_state:
         result = select_by_id(obj["id"])
+    return result
+
+
+def auth(user: dict):
+    result = False
+    username = user["username"]
+    password = user["password"]
+    print(f"username: {username} password: {password}")
+    en_username = Util.encrypte_data(username)
+    print(f"en_username: {en_username}")
+    all_users = DB_Service.select_all(DB_path, "SELECT * FROM user")
+    if len(all_users) > 0:
+        for user in all_users:
+            if username == Util.decrypte_data(user[1]):
+                print("username match")
+                if password == Util.decrypte_data(user[2]):
+                    print("user password match")
+                    result = True
     return result
 
 

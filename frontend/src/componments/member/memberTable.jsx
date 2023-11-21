@@ -22,7 +22,7 @@ const TodosContext = React.createContext({
   todos: [], fetchTodos: () => {}
 })
 
-const Table = ({ data }) => {
+const MemberTable = ({ data }) => {
   const columns = useMemo(
     () => [
       // { Header: "ID", accessor: "id", sortType: 'basic' },
@@ -273,4 +273,4 @@ const Table = ({ data }) => {
   );
 };
 
-export default Table;
+export default MemberTable;

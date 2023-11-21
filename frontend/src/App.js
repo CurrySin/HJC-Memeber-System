@@ -1,24 +1,63 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useMemo, useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Link, Route } from "react-router-dom";
+import Login from "./componments/login/Login";
+import Memeber from "./componments/member/member";
+import {
+  Button,
+  ButtonGroup,
+  Flex,
+  Heading,
+  Box,
+  Spacer,
+} from "@chakra-ui/react";
+import "./App.css";
 
 function App() {
+  const [haveSession, setSession] = useState(false)
+
+  useEffect(() => {
+    if (localStorage.getItem("session")) {
+      setSession(true);
+    } 
+  });
+
+  function onClickLogOut() {
+    localStorage.removeItem("session");
+    window.location.href = "/";
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <ul>
+          <Flex minWidth="max-content" alignItems="center" gap="2" style={{margin:"10px"}}>
+            <Box p="2">
+              <Heading size="md">Chakra App</Heading>
+            </Box>
+            <ButtonGroup gap="2" style={{display: haveSession? 'block': 'none'}}>
+              <Button colorScheme="teal">Memeber</Button>
+            </ButtonGroup>
+            <Spacer />
+            <ButtonGroup gap="2" style={{display: haveSession? 'none': 'block'}}>
+              <Button colorScheme="teal" to="/">
+                Log In
+              </Button>
+            </ButtonGroup>
+            <ButtonGroup gap="2" style={{display: haveSession? 'block': 'none'}}>
+              <Button colorScheme="teal" onClick={onClickLogOut}>
+                Log Out
+              </Button>
+            </ButtonGroup>
+          </Flex>
+        </ul>
+
+        <hr />
+        <Routes>
+          <Route exact path="/" element={<Login />} />
+          <Route path="/member" element={<Memeber />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

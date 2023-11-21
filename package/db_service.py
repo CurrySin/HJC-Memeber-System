@@ -23,11 +23,11 @@ class DB_Service:
         return result
 
     @staticmethod
-    def select_by_id(db_path, sql, id):
+    def select_by_param(db_path, sql, param):
         if DB.conn is None:
             DB.create_connectionn(db_path)
         cursor_obj = DB.conn.cursor()
-        cursor_obj.execute(sql, (id,))
+        cursor_obj.execute(sql, param)
         result = cursor_obj.fetchall()
         return result
 

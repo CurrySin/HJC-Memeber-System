@@ -6,8 +6,7 @@ import datetime
 logger = logging.getLogger('cesp_logger')
 logger.setLevel(logging.DEBUG)
 logger_handle = TimedRotatingFileHandler(
-    ".\\log\\" + datetime.datetime.now().strftime("%Y-%m-%d") +
-    ".log", when='midnight',
+    ".\\log\\HJCMS.log", when='midnight',
     backupCount=10, encoding='utf-8')
 formatter = logging.Formatter(
     '%(asctime)s - %(levelname)-8s - %(message)s',

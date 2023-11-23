@@ -13,17 +13,17 @@ import {
 import "./App.css";
 
 function App() {
-  const [haveSession, setSession] = useState(false)
+  const [haveSession, setHaveSession] = useState(false)
 
   useEffect(() => {
     if (localStorage.getItem("session")) {
-      setSession(true);
-    } 
+      setHaveSession(true);
+    }
   });
 
   function onClickLogOut() {
     localStorage.removeItem("session");
-    window.location.href = "/";
+    window.location.href = '/';
   }
 
   return (
@@ -32,7 +32,7 @@ function App() {
         <ul>
           <Flex minWidth="max-content" alignItems="center" gap="2" style={{margin:"10px"}}>
             <Box p="2">
-              <Heading size="md">Chakra App</Heading>
+              <Heading size="md">JCI Harbour</Heading>
             </Box>
             <ButtonGroup gap="2" style={{display: haveSession? 'block': 'none'}}>
               <Button colorScheme="teal">Memeber</Button>
@@ -44,7 +44,7 @@ function App() {
               </Button>
             </ButtonGroup>
             <ButtonGroup gap="2" style={{display: haveSession? 'block': 'none'}}>
-              <Button colorScheme="teal" onClick={onClickLogOut}>
+              <Button colorScheme="red" onClick={onClickLogOut}>
                 Log Out
               </Button>
             </ButtonGroup>

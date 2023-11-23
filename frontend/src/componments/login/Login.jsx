@@ -46,10 +46,9 @@ const Login = () => {
           expire: new Date().getTime() + 3600000,
         }));
       }
-      
+      window.location.reload(false);
+      window.location.href = 'member';
     }
-    window.location.reload(false);
-    window.location.href = 'member';
   };
 
   return (

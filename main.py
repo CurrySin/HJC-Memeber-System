@@ -1,6 +1,10 @@
 import uvicorn
 import os
 import datetime
+from PIL import Image
+import numpy as np
+import io
+import base64
 from typing import Annotated
 from package.excel_reader import Excel_Reader
 from package.excel_writer import Excel_Writer
@@ -17,6 +21,8 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "localhost:3000"
+    "http://localhost:8000",
+    "localhost:8000"
 ]
 
 
@@ -27,17 +33,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-
-todos = [
-    {
-        "id": "1",
-        "item": "Read a book."
-    },
-    {
-        "id": "2",
-        "item": "Cycle around town."
-    }
-]
 
 DB_path = ".\\db\\hjc_members.db"
 
@@ -99,6 +94,17 @@ async def login(user: dict):
     }
 
 
+@app.post("/photo", tags=["Test"])
+async def photo_upload(request_body: dict):
+    if request_body:
+        if request_body["data"]:
+            raw = request_body["data"].split(",")[1]
+            img = Image.open(io.BytesIO(base64.decodebytes(bytes(raw, "utf-8"))))
+            img.save(f'.\\web\\public\\pic\\{request_body["file_name"]}.png')
+            return True
+    return False
+
+
 @app.get("/", tags=["root"])
 async def read_root() -> dict:
     return "Welcome to HJC member system"
@@ -136,13 +142,13 @@ def select_by_id(id):
     result_list = DB_Service.select_by_param(DB_path, sql_str, (id,))
     member_list = []
     for member in result_list:
-        member_list.append(Member.tupleTOdict(member))
+        member_list.append(Member.tupleTOdict(member, Member.DECRYPTION))
     return member_list
 
 
 def insert_db(member):
-    sql_str = "INSERT INTO MEMBER(hjc_id, first_name, last_name, email, gender, phone) VALUES(?,?,?,?,?,?)"
-    result = DB_Service.insert(DB_path, sql_str, Member.dictTOtuple(member))
+    sql_str = '''INSERT INTO MEMBER(NOM, "NOM Code", "NOM ID", "Member ID", "NOM Member Type", "LOM Member Type", "Senator", "Senator ID", "Date PM", "Date Induct", "Title", "HON", "PNP", "Current Position", "First Name", "Mid Name", "Last Name", "Chi Name", "Gender", "DOB", "HKID", "Marital", "Mailing Address", "Mailing Problem", "Home Address Line1", "Home Address Line2", "Home Address Line3", "Home Address Line4", "Home District", "Office Address Line1", "Office Address Line2", "Office Address Line3", "Office Address Line4", "Mobile", "Home Tel", "Office Tel", "Fax Home", "Fax Office", "Email 1", "Email 2", "Comission_TDC", "Comission_NBN", "Comission_Mainland", "Comission_IA", "Comission_NCCC", "Comission_CorpComm", "Highest Education", "Company Name", "Company Title", Industry, "Highest Trainer Status", "Other Social Involvement 1", "Other Social Involvement 2", "Other Social Involvement 3", "Print on JCIHK Directory", "Company Web Site", "Highest Position in NOM", "Highest Position in LOM", "Highest Profressional Qualification", "Mail Opt-out", "Email Opt-out", "Photo") VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'''
+    result = DB_Service.insert(DB_path, sql_str, Member.dictTOtuple(member, Member.ENCRYPTION))
     return result
 
 
@@ -153,7 +159,7 @@ def read_db():
     print(f"len(result_list): {len(result_list)}")
     if len(result_list) > 0:
         for member in result_list:
-            member_list.append(Member.tupleTOdict(member))
+            member_list.append(Member.tupleTOdict(member, Member.DECRYPTION))
     return member_list
 
 
@@ -171,9 +177,6 @@ def auth(user: dict):
     result = False
     username = user["username"]
     password = user["password"]
-    print(f"username: {username} password: {password}")
-    en_username = Util.encrypte_data(username)
-    print(f"en_username: {en_username}")
     all_users = DB_Service.select_all(DB_path, "SELECT * FROM user")
     if len(all_users) > 0:
         for user in all_users:

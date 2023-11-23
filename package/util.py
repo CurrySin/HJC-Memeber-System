@@ -73,7 +73,6 @@ class Util:
         key_path = r".\secret\key"
         if (Util.check_encryte_key(key_path)) is True:
             key = Util.read_file(key_path)
-            print(f"key: {key}")
             fernet = Fernet(key)
             uncipher_text = (fernet.decrypt(encrypted_string))
             return bytes(uncipher_text).decode("utf-8")

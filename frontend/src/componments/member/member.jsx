@@ -68,10 +68,10 @@ function CreateMember() {
   const [in_HomeAdressLine3, SetHomeAdressLine3] = useState("");
   const [in_HomeAdressLine4, SetHomeAdressLine4] = useState("");
   const [in_HomeDistrict, SetHomeDistrict] = useState("");
-  const [in_OfficeAdressLine1, SetOfficeAdressLine1] = useState("");
-  const [in_OfficeAdressLine2, SetOfficeAdressLine2] = useState("");
-  const [in_OfficeAdressLine3, SetOfficeAdressLine3] = useState("");
-  const [in_OfficeAdressLine4, SetOfficeAdressLine4] = useState("");
+  const [in_OfficeAdressLine1, SetOfficeAddressLine11] = useState("");
+  const [in_OfficeAdressLine2, SetOfficeAddressLine12] = useState("");
+  const [in_OfficeAdressLine3, SetOfficeAddressLine13] = useState("");
+  const [in_OfficeAdressLine4, SetOfficeAddressLine14] = useState("");
   const [in_Mobile, SetMobile] = useState("");
   const [in_HomeTel, SetHomeTel] = useState("");
   const [in_OfficeTel, SetOfficeTel] = useState("");
@@ -107,7 +107,7 @@ function CreateMember() {
   const { fetchTodos } = React.useContext(TodosContext);
 
   const createMember = async () => {
-    var pic_base64 = null
+    var pic_base64 = null;
     if (in_Photo) {
       pic_base64 = await toBase64(in_Photo);
       console.log(pic_base64);
@@ -199,6 +199,20 @@ function CreateMember() {
     window.location.reload(false);
   };
 
+  useEffect(() => {
+    var sessionObj = JSON.parse(localStorage.getItem("session"));
+    if (!sessionObj) {
+      window.location.href = "/";
+    } else {
+      if (new Date().getTime() > sessionObj.expire) {
+        localStorage.removeItem("session");
+        window.location.href = "/";
+      } else {
+        fetchTodos();
+      }
+    }
+  }, []);
+
   const toBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -247,8 +261,8 @@ function CreateMember() {
             <AccordionItem>
               <h2>
                 <AccordionButton>
-                  <Box as="span" flex="1" textAlign="left">
-                    Personal Infomation Section 1
+                  <Box as="span" flex="1" textAlign="cneter">
+                    Personal Infomation # 1
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
@@ -296,7 +310,7 @@ function CreateMember() {
                           id="start"
                           name="trip-start"
                           value={in_DOB}
-                          min="1970-01-01"
+                          min="1950-01-01"
                           onChange={(e) => SetDOB(e.target.value)}
                         />
                       </InputGroup>
@@ -365,8 +379,8 @@ function CreateMember() {
                           placeholder="Select"
                           size="md"
                         >
-                          <option value="Male">Mr</option>
-                          <option value="Female">Ms</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
                         </Select>
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
@@ -419,8 +433,8 @@ function CreateMember() {
             <AccordionItem>
               <h2>
                 <AccordionButton>
-                  <Box as="span" flex="1" textAlign="left">
-                    Personal Infomation Section 2
+                  <Box as="span" flex="1" textAlign="cneter">
+                    Personal Infomation # 2
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
@@ -446,7 +460,9 @@ function CreateMember() {
                           placeholder="Enter"
                           aria-label="Office Addr. L1"
                           value={in_OfficeAdressLine1}
-                          onChange={(e) => SetOfficeAdressLine1(e.target.value)}
+                          onChange={(e) =>
+                            SetOfficeAddressLine11(e.target.value)
+                          }
                         />
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
@@ -456,7 +472,9 @@ function CreateMember() {
                           placeholder="Enter"
                           aria-label="Office Addr. L3"
                           value={in_OfficeAdressLine3}
-                          onChange={(e) => SetOfficeAdressLine3(e.target.value)}
+                          onChange={(e) =>
+                            SetOfficeAddressLine13(e.target.value)
+                          }
                         />
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
@@ -521,7 +539,9 @@ function CreateMember() {
                           placeholder="Enter"
                           aria-label="Office Addr. L2"
                           value={in_OfficeAdressLine2}
-                          onChange={(e) => SetOfficeAdressLine2(e.target.value)}
+                          onChange={(e) =>
+                            SetOfficeAddressLine12(e.target.value)
+                          }
                         />
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
@@ -531,7 +551,9 @@ function CreateMember() {
                           placeholder="Enter"
                           aria-label="Office Addr. L4"
                           value={in_OfficeAdressLine4}
-                          onChange={(e) => SetOfficeAdressLine4(e.target.value)}
+                          onChange={(e) =>
+                            SetOfficeAddressLine14(e.target.value)
+                          }
                         />
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
@@ -584,8 +606,8 @@ function CreateMember() {
             <AccordionItem>
               <h2>
                 <AccordionButton>
-                  <Box as="span" flex="1" textAlign="left">
-                    Personal Infomation Section 3
+                  <Box as="span" flex="1" textAlign="cneter">
+                    Personal Infomation # 3
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
@@ -661,8 +683,8 @@ function CreateMember() {
             <AccordionItem>
               <h2>
                 <AccordionButton>
-                  <Box as="span" flex="1" textAlign="left">
-                    JC LOM Info. Section 1
+                  <Box as="span" flex="1" textAlign="cneter">
+                    JC LOM Info. # 1
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
@@ -704,33 +726,39 @@ function CreateMember() {
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
                         <InputLeftAddon children="Comission TDC" />
-                        <Input
-                          type="text"
-                          placeholder="Enter"
-                          aria-label="Comission TDC"
+                        <Select
                           value={in_ComissionTDC}
                           onChange={(e) => SetComissionTDC(e.target.value)}
-                        />
+                          placeholder="Select"
+                          size="md"
+                        >
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </Select>
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
                         <InputLeftAddon children="Comission Mainland" />
-                        <Input
-                          type="text"
-                          placeholder="Enter"
-                          aria-label="Comission Mainland"
+                        <Select
                           value={in_ComissionMainland}
                           onChange={(e) => SetComissionMainland(e.target.value)}
-                        />
+                          placeholder="Select"
+                          size="md"
+                        >
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </Select>
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
                         <InputLeftAddon children="Comission NCCC" />
-                        <Input
-                          type="text"
-                          placeholder="Enter"
-                          aria-label="Comission NCCC"
+                        <Select
                           value={in_ComissionNCCC}
                           onChange={(e) => SetComissionNCCC(e.target.value)}
-                        />
+                          placeholder="Select"
+                          size="md"
+                        >
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </Select>
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
                         <InputLeftAddon children="Highest Trainer Status" />
@@ -786,33 +814,39 @@ function CreateMember() {
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
                         <InputLeftAddon children="Comission NBN" />
-                        <Input
-                          type="text"
-                          placeholder="Enter"
-                          aria-label="Comission NBN"
+                        <Select
                           value={in_ComissionNBN}
                           onChange={(e) => SetComissionNBN(e.target.value)}
-                        />
+                          placeholder="Select"
+                          size="md"
+                        >
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </Select>
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
                         <InputLeftAddon children="Comission IA" />
-                        <Input
-                          type="text"
-                          placeholder="Enter"
-                          aria-label="Comission IA"
+                        <Select
                           value={in_ComissionIA}
                           onChange={(e) => SetComissionIA(e.target.value)}
-                        />
+                          placeholder="Select"
+                          size="md"
+                        >
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </Select>
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
-                        <InputLeftAddon children="Comission CropComm" />
-                        <Input
-                          type="text"
-                          placeholder="Enter"
-                          aria-label="Comission CropComm"
+                        <InputLeftAddon children="Comission CorpComm" />
+                        <Select
                           value={in_ComissionCorpComm}
                           onChange={(e) => SetComissionCorpComm(e.target.value)}
-                        />
+                          placeholder="Select"
+                          size="md"
+                        >
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </Select>
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
                         <InputLeftAddon children="Highest Position" />
@@ -836,8 +870,8 @@ function CreateMember() {
             <AccordionItem>
               <h2>
                 <AccordionButton>
-                  <Box as="span" flex="1" textAlign="left">
-                    JC LOM Info. Section 2
+                  <Box as="span" flex="1" textAlign="cneter">
+                    JC LOM Info. # 2
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
@@ -882,23 +916,27 @@ function CreateMember() {
                   </InputGroup>
                   <InputGroup size="md" style={{ marginBottom: "5px" }}>
                     <InputLeftAddon children="Mail Opt-out" />
-                    <Input
-                      type="text"
-                      placeholder="Enter"
-                      aria-label="Mail Opt-out"
+                    <Select
                       value={in_MailOptOut}
                       onChange={(e) => SetMailOptOut(e.target.value)}
-                    />
+                      placeholder="Select"
+                      size="md"
+                    >
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </Select>
                   </InputGroup>
                   <InputGroup size="md" style={{ marginBottom: "5px" }}>
                     <InputLeftAddon children="Email Opt-out" />
-                    <Input
-                      type="text"
-                      placeholder="Enter"
-                      aria-label="Email Opt-out"
+                    <Select
                       value={in_EmailOptOut}
                       onChange={(e) => SetEmailOptOut(e.target.value)}
-                    />
+                      placeholder="Select"
+                      size="md"
+                    >
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </Select>
                   </InputGroup>
                 </Box>
               </AccordionPanel>
@@ -907,8 +945,8 @@ function CreateMember() {
             <AccordionItem>
               <h2>
                 <AccordionButton>
-                  <Box as="span" flex="1" textAlign="left">
-                    JC NOM Info. Section 1
+                  <Box as="span" flex="1" textAlign="cneter">
+                    JC NOM Info. # 1
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
@@ -939,13 +977,15 @@ function CreateMember() {
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
                         <InputLeftAddon children="Senator" />
-                        <Input
-                          type="text"
-                          placeholder="Enter"
-                          aria-label="Senator"
+                        <Select
                           value={in_Senator}
                           onChange={(e) => SetSenator(e.target.value)}
-                        />
+                          placeholder="Select"
+                          size="md"
+                        >
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </Select>
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
                         <InputLeftAddon children="HON" />
@@ -1002,13 +1042,15 @@ function CreateMember() {
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
                         <InputLeftAddon children="PNP" />
-                        <Input
-                          type="text"
-                          placeholder="Enter"
-                          aria-label="PNP"
+                        <Select
                           value={in_PNP}
                           onChange={(e) => SetPNP(e.target.value)}
-                        />
+                          placeholder="Select"
+                          size="md"
+                        >
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </Select>
                       </InputGroup>
                       <InputGroup size="md" style={{ marginBottom: "5px" }}>
                         <InputLeftAddon children="Highest Position" />

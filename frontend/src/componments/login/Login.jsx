@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -37,7 +37,6 @@ const Login = () => {
         result = data.data;
       });
 
-    console.log(result);
     if (result === true) {
       var exist_session = localStorage.getItem("session")
       if (!exist_session) {
@@ -47,9 +46,18 @@ const Login = () => {
         }));
       }
       window.location.reload(false);
-      window.location.href = 'member';
+      window.location.href = '/member';
     }
   };
+
+  useEffect(() => {
+    var sessionObj = JSON.parse(localStorage.getItem("session"));
+    if (sessionObj) {
+      if (new Date().getTime() < sessionObj.expire) {
+        window.location.href = "/member";
+      }
+    } 
+  }, []);
 
   return (
     <Container
@@ -60,9 +68,9 @@ const Login = () => {
       <Stack spacing="8">
         <Stack spacing="6">
           <img
-            src="html.png"
+            src={"http://localhost:8000/pic?id=main_logo"}
             style={{
-              width: "50%",
+              width: "100%",
               display: "block",
               marginLeft: "auto",
               marginRight: "auto",

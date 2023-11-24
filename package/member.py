@@ -2,7 +2,7 @@ from .util import Util
 
 
 class Member:
-    keys = ["ID", "NOM", "NOM Code", "NOM ID", "Member ID", "NOM Member Type",
+    keys = ["id", "NOM", "NOM Code", "NOM ID", "Member ID", "NOM Member Type",
             "LOM Member Type", "Senator", "Senator ID", "Date PM",
             "Date Induct", "Title", "HON", "PNP", "Current Position",
             "First Name", "Mid Name", "Last Name", "Chi Name", "Gender",

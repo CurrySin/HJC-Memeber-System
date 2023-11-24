@@ -11,18 +11,22 @@ from package.excel_writer import Excel_Writer
 from package.member import Member
 from package.db import DB
 from package.db_service import DB_Service
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
 from package.util import Util
-
+from starlette.responses import FileResponse
+from multiprocessing import freeze_support
+from .package.util import Logger
 
 app = FastAPI()
 
 origins = [
     "http://localhost:3000",
-    "localhost:3000"
+    "localhost:3000",
     "http://localhost:8000",
-    "localhost:8000"
+    "localhost:8000",
+    "http://localhost:8002",
+    "localhost:8002"
 ]
 
 
@@ -99,10 +103,30 @@ async def photo_upload(request_body: dict):
     if request_body:
         if request_body["data"]:
             raw = request_body["data"].split(",")[1]
-            img = Image.open(io.BytesIO(base64.decodebytes(bytes(raw, "utf-8"))))
-            img.save(f'.\\web\\public\\pic\\{request_body["file_name"]}.png')
+            img = Image.open(io.BytesIO(
+                base64.decodebytes(bytes(raw, "utf-8"))))
+            img.save(f'.\\pic\\{request_body["file_name"]}.png')
             return True
     return False
+
+
+@app.get("/pic", tags=["member"])
+async def get_pic(request: Request):
+    if request:
+        member_id = request._query_params.get("id")
+        file_path = ""
+        Logger.info(f"id: {member_id}")
+        for file_path in os.listdir(r"./pic"):
+            if str(member_id) in file_path:
+                Logger.info(f"file found: {file_path}")
+                file_path = r"./pic/" + file_path
+                break
+            else:
+                file_path = r"./pic/default.jpg"
+        Logger.info(file_path)
+        return FileResponse(file_path, headers={"Cache-Control": "no-cache"})
+    else:
+        return ""
 
 
 @app.get("/", tags=["root"])
@@ -111,7 +135,7 @@ async def read_root() -> dict:
 
 
 def main():
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=False, workers=1)
 
 
 def import_raw_excel_py() -> bool:
@@ -130,7 +154,8 @@ def gen_test_excel_to_folder():
 
 def gen_test_excel_to_folder_2():
     er = Excel_Writer()
-    keys = ['id', 'hjc_id', 'first_name', 'last_name', 'email', 'gender', 'phone']
+    keys = ['id', 'hjc_id', 'first_name',
+            'last_name', 'email', 'gender', 'phone']
     export_path = "./export/"
     sql_str = "SELECT * FROM member"
     Util.open_folder(os.path.abspath(export_path))
@@ -147,8 +172,9 @@ def select_by_id(id):
 
 
 def insert_db(member):
-    sql_str = '''INSERT INTO MEMBER(NOM, "NOM Code", "NOM ID", "Member ID", "NOM Member Type", "LOM Member Type", "Senator", "Senator ID", "Date PM", "Date Induct", "Title", "HON", "PNP", "Current Position", "First Name", "Mid Name", "Last Name", "Chi Name", "Gender", "DOB", "HKID", "Marital", "Mailing Address", "Mailing Problem", "Home Address Line1", "Home Address Line2", "Home Address Line3", "Home Address Line4", "Home District", "Office Address Line1", "Office Address Line2", "Office Address Line3", "Office Address Line4", "Mobile", "Home Tel", "Office Tel", "Fax Home", "Fax Office", "Email 1", "Email 2", "Comission_TDC", "Comission_NBN", "Comission_Mainland", "Comission_IA", "Comission_NCCC", "Comission_CorpComm", "Highest Education", "Company Name", "Company Title", Industry, "Highest Trainer Status", "Other Social Involvement 1", "Other Social Involvement 2", "Other Social Involvement 3", "Print on JCIHK Directory", "Company Web Site", "Highest Position in NOM", "Highest Position in LOM", "Highest Profressional Qualification", "Mail Opt-out", "Email Opt-out", "Photo") VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'''
-    result = DB_Service.insert(DB_path, sql_str, Member.dictTOtuple(member, Member.ENCRYPTION))
+    sql_str = '''INSERT INTO MEMBER(NOM,  "NOM Code",  "NOM ID",  "Member ID",  "NOM Member Type",  "LOM Member Type",  Senator,  "Senator ID",  "Date PM",  "Date Induct",  Title,  HON,  PNP,  "Current Position",  "First Name",  "Mid Name",  "Last Name",  "Chi Name",  Gender,  DOB,  HKID,  Marital,  "Mailing Address",  "Mailing Problem",  "Home Address Line1",  "Home Address Line2",  "Home Address Line3",  "Home Address Line4",  "Home District",  "Office Address Line1",  "Office Address Line2",  "Office Address Line3",  "Office Address Line4",  Mobile,  "Home Tel",  "Office Tel",  "Fax Home",  "Fax Office",  "Email 1",  "Email 2",  Comission_TDC,  Comission_NBN,  Comission_Mainland,  Comission_IA,  Comission_NCCC,  Comission_CorpComm,  "Highest Education",  "Company Name",  "Company Title",  Industry,  "Highest Trainer Status",  "Other Social Involvement 1",  "Other Social Involvement 2",  "Other Social Involvement 3",  "Print on JCIHK Directory",  "Company Web Site",  "Highest Position in NOM",  "Highest Position in LOM",  "Highest Profressional Qualification",  "Mail Opt-out",  "Email Opt-out",  Photo) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'''
+    result = DB_Service.insert(
+        DB_path, sql_str, Member.dictTOtuple(member, Member.ENCRYPTION))
     return result
 
 
@@ -164,10 +190,12 @@ def read_db():
 
 
 def update_db(obj):
-    print(obj)
-    sql_str = "UPDATE member SET phone = ?, gender = ?, email = ?, last_name = ?, first_name = ?, hjc_id = ? WHERE id = ?"
+    sql_str = 'UPDATE MEMBER SET Photo = ?, "Email Opt-out" = ?, "Mail Opt-out" = ?, "Highest Profressional Qualification" = ?, "Highest Position in LOM" = ?, "Highest Position in NOM" = ?, "Company Web Site" = ?, "Print on JCIHK Directory" = ?, "Other Social Involvement 3" = ?, "Other Social Involvement 2" = ?, "Other Social Involvement 1" = ?, "Highest Trainer Status" = ?, Industry = ?, "Company Title" = ?, "Company Name" = ?, "Highest Education" = ?, Comission_CorpComm = ?, Comission_NCCC = ?, Comission_IA = ?, Comission_Mainland = ?, Comission_NBN = ?, Comission_TDC = ?, "Email 2" = ?, "Email 1" = ?, "Fax Office" = ?, "Fax Home" = ?, "Office Tel" = ?, "Home Tel" = ?, Mobile = ?, "Office Address Line4" = ?, "Office Address Line3" = ?, "Office Address Line2" = ?, "Office Address Line1" = ?, "Home District" = ?, "Home Address Line4" = ?, "Home Address Line3" = ?, "Home Address Line2" = ?, "Home Address Line1" = ?, "Mailing Problem" = ?, "Mailing Address" = ?, Marital = ?, HKID = ?, DOB = ?, Gender = ?, "Chi Name" = ?, "Last Name" = ?, "Mid Name" = ?, "First Name" = ?, "Current Position" = ?, PNP = ?, HON = ?, Title = ?, "Date Induct" = ?, "Date PM" = ?, "Senator ID" = ?, Senator = ?, "LOM Member Type" = ?, "NOM Member Type" = ?, "Member ID" = ?, "NOM ID" = ?, "NOM Code" = ?, NOM = ? WHERE id = ?'
+    member_tuple = Member.dictTOtuple(obj, Member.ENCRYPTION)[::-1]
+    tmp_l1 = list(member_tuple)
+    tmp_l1.append(obj["id"])
     result = None
-    update_state = DB_Service.update(DB_path, sql_str, Member.dictTOtuple(obj)[::-1])
+    update_state = DB_Service.update(DB_path, sql_str, tuple(tmp_l1))
     if update_state:
         result = select_by_id(obj["id"])
     return result
@@ -210,4 +238,5 @@ def test():
 
 
 if __name__ == "__main__":
+    freeze_support()
     main()

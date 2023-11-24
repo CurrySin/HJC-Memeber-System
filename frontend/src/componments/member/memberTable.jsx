@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTable, useSortBy, useFilters, usePagination } from "react-table";
 import { ChakraProvider, Spacer } from "@chakra-ui/react";
 import {
@@ -120,6 +120,7 @@ const MemberTable = ({ data }) => {
   }
 
   function UpdateMember({
+    ID,
     NOM,
     MemberID,
     FirstName,
@@ -144,10 +145,10 @@ const MemberTable = ({ data }) => {
     Marital,
     MailingAddress,
     MailingProblem,
-    HomeAdressLine1,
-    HomeAdressLine2,
-    HomeAdressLine3,
-    HomeAdressLine4,
+    HomeAddressLine1,
+    HomeAddressLine2,
+    HomeAddressLine3,
+    HomeAddressLine4,
     HomeDistrict,
     OfficeAddressLine1,
     OfficeAddressLine2,
@@ -181,7 +182,7 @@ const MemberTable = ({ data }) => {
     HighestProfressionalQualification,
     MailOptout,
     EmailOptout,
-    Photo
+    Photo,
   }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [in_NOM, SetNOM] = useState(NOM);
@@ -208,18 +209,22 @@ const MemberTable = ({ data }) => {
     const [in_Marital, SetMarital] = useState(Marital);
     const [in_MailingAddress, SetMailingAddress] = useState(MailingAddress);
     const [in_MailingProblem, SetMailingProblem] = useState(MailingProblem);
-    const [in_HomeAdressLine1, SetHomeAdressLine1] = useState(HomeAdressLine1);
-    const [in_HomeAdressLine2, SetHomeAdressLine2] = useState(HomeAdressLine2);
-    const [in_HomeAdressLine3, SetHomeAdressLine3] = useState(HomeAdressLine3);
-    const [in_HomeAdressLine4, SetHomeAdressLine4] = useState(HomeAdressLine4);
+    const [in_HomeAddressLine1, SetHomeAddressLine1] =
+      useState(HomeAddressLine1);
+    const [in_HomeAddressLine2, SetHomeAddressLine2] =
+      useState(HomeAddressLine2);
+    const [in_HomeAddressLine3, SetHomeAddressLine3] =
+      useState(HomeAddressLine3);
+    const [in_HomeAddressLine4, SetHomeAddressLine4] =
+      useState(HomeAddressLine4);
     const [in_HomeDistrict, SetHomeDistrict] = useState(HomeDistrict);
-    const [in_OfficeAdressLine1, SetOfficeAdressLine1] =
+    const [in_OfficeAdressLine1, SetOfficeAddressLine11] =
       useState(OfficeAddressLine1);
-    const [in_OfficeAdressLine2, SetOfficeAdressLine2] =
+    const [in_OfficeAdressLine2, SetOfficeAddressLine12] =
       useState(OfficeAddressLine2);
-    const [in_OfficeAdressLine3, SetOfficeAdressLine3] =
+    const [in_OfficeAdressLine3, SetOfficeAddressLine13] =
       useState(OfficeAddressLine3);
-    const [in_OfficeAdressLine4, SetOfficeAdressLine4] =
+    const [in_OfficeAdressLine4, SetOfficeAddressLine14] =
       useState(OfficeAddressLine4);
     const [in_Mobile, SetMobile] = useState(Mobile);
     const [in_HomeTel, SetHomeTel] = useState(HomeTel);
@@ -230,25 +235,36 @@ const MemberTable = ({ data }) => {
     const [in_Email2, SetEmail2] = useState(Email2);
     const [in_ComissionTDC, SetComissionTDC] = useState(Comission_TDC);
     const [in_ComissionNBN, SetComissionNBN] = useState(Comission_NBN);
-    const [in_ComissionMainland, SetComissionMainland] = useState(Comission_Mainland);
+    const [in_ComissionMainland, SetComissionMainland] =
+      useState(Comission_Mainland);
     const [in_ComissionIA, SetComissionIA] = useState(Comission_IA);
     const [in_ComissionNCCC, SetComissionNCCC] = useState(Comission_NCCC);
-    const [in_ComissionCorpComm, SetComissionCorpComm] = useState(Comission_CorpComm);
-    const [in_HighestEducation, SetHighestEducation] = useState(HighestEducation);
+    const [in_ComissionCorpComm, SetComissionCorpComm] =
+      useState(Comission_CorpComm);
+    const [in_HighestEducation, SetHighestEducation] =
+      useState(HighestEducation);
     const [in_CompanyName, SetCompanyName] = useState(CompanyName);
     const [in_CompanyTitle, SetCompanyTitle] = useState(CompanyTitle);
     const [in_Industry, SetIndustry] = useState(Industry);
-    const [in_HighestTrainerStatus, SetHighestTrainerStatus] = useState(HighestTrainerStatus);
-    const [in_OtherSocialInvolvement1, SetOtherSocialInvolvement1] =
-      useState(OtherSocialInvolvement1);
-    const [in_OtherSocialInvolvement2, SetOtherSocialInvolvement2] =
-      useState(OtherSocialInvolvement2);
-    const [in_OtherSocialInvolvement3, SetOtherSocialInvolvement3] =
-      useState(OtherSocialInvolvement3);
-    const [in_PrintOnJCIHKDirectory, SetPrintOnJCIHKDirectory] = useState(PrintonJCIHKDirectory);
+    const [in_HighestTrainerStatus, SetHighestTrainerStatus] =
+      useState(HighestTrainerStatus);
+    const [in_OtherSocialInvolvement1, SetOtherSocialInvolvement1] = useState(
+      OtherSocialInvolvement1
+    );
+    const [in_OtherSocialInvolvement2, SetOtherSocialInvolvement2] = useState(
+      OtherSocialInvolvement2
+    );
+    const [in_OtherSocialInvolvement3, SetOtherSocialInvolvement3] = useState(
+      OtherSocialInvolvement3
+    );
+    const [in_PrintOnJCIHKDirectory, SetPrintOnJCIHKDirectory] = useState(
+      PrintonJCIHKDirectory
+    );
     const [in_CompanyWebSite, SetCompanyWebSite] = useState(CompanyWebSite);
-    const [in_HighestPositionInNOM, SetHighestPositionInNOM] = useState(HighestPositioninNOM);
-    const [in_HighestPositionInLOM, SetHighestPositionInLOM] = useState(HighestPositioninLOM);
+    const [in_HighestPositionInNOM, SetHighestPositionInNOM] =
+      useState(HighestPositioninNOM);
+    const [in_HighestPositionInLOM, SetHighestPositionInLOM] =
+      useState(HighestPositioninLOM);
     const [
       in_HighestProfressionalQualification,
       SetHighestProfressionalQualification,
@@ -256,11 +272,16 @@ const MemberTable = ({ data }) => {
     const [in_MailOptOut, SetMailOptOut] = useState(MailOptout);
     const [in_EmailOptOut, SetEmailOptOut] = useState(EmailOptout);
     const [in_Photo, SetPhoto] = useState(Photo);
+    const [new_Photo, SetNewPhoto] = useState("");
     const { fetchTodos } = React.useContext(TodosContext);
 
     const UpdateMember = async () => {
+      var pic_base64 = null;
+      if (new_Photo) {
+        pic_base64 = await toBase64(new_Photo);
+      }
       var obj = {
-        id: "",
+        id: ID,
         NOM: in_NOM,
         "NOM Code": in_NOMCode,
         "NOM ID": in_NOMID,
@@ -285,10 +306,10 @@ const MemberTable = ({ data }) => {
         Marital: in_Marital,
         "Mailing Address": in_MailingAddress,
         "Mailing Problem": in_MailingProblem,
-        "Home Address Line1": in_HomeAdressLine1,
-        "Home Address Line2": in_HomeAdressLine2,
-        "Home Address Line3": in_HomeAdressLine3,
-        "Home Address Line4": in_HomeAdressLine4,
+        "Home Address Line1": in_HomeAddressLine1,
+        "Home Address Line2": in_HomeAddressLine2,
+        "Home Address Line3": in_HomeAddressLine3,
+        "Home Address Line4": in_HomeAddressLine4,
         "Home District": in_HomeDistrict,
         "Office Address Line1": in_OfficeAdressLine1,
         "Office Address Line2": in_OfficeAdressLine2,
@@ -326,25 +347,39 @@ const MemberTable = ({ data }) => {
         Photo: in_MemberID + ".png",
       };
       console.log(obj);
-      // var obj = {
-      //   id: in_item_id,
-      //   hjc_id: in_hjc_id,
-      //   first_name: in_first_name,
-      //   last_name: in_gender,
-      //   gender: in_gender,
-      //   email: in_email,
-      //   phone: in_phone,
-      // };
-      // console.log(obj);
-      // await fetch(`http://localhost:8000/member/`, {
-      //   method: "PUT",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(obj),
-      // });
-      // onClose();
-      // await fetchTodos();
-      // window.location.reload(false);
+      console.log(Object.keys(obj).length);
+      await fetch(`http://localhost:8000/member`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(obj),
+      });
+      if (in_Photo) {
+        await fetch(`http://localhost:8000/photo`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            data: pic_base64,
+            file_name: in_MemberID,
+          }),
+        });
+      }
+      onClose();
+      await fetchTodos();
+      window.location.reload(false);
     };
+
+    useEffect(() => {
+      var sessionObj = JSON.parse(localStorage.getItem("session"));
+      if (!sessionObj) {
+        window.location.href = "/";
+      } else {
+        if (new Date().getTime() > sessionObj.expire) {
+          localStorage.removeItem("session");
+          window.location.href = "/";
+        }
+      }
+    }, []);
+
     const toBase64 = (file) =>
       new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -356,13 +391,13 @@ const MemberTable = ({ data }) => {
     return (
       <>
         <Button colorScheme="gray" h="1.5rem" size="sm" onClick={onOpen}>
-          Update Member
+          Update
         </Button>
         <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>
-              Update Member {in_FirstName + " " + in_LastName}
+              Update Member ({in_FirstName + " " + in_LastName})
             </ModalHeader>
             <ModalCloseButton />
             <ModalBody style={{ marginBottom: "120px" }}>
@@ -387,14 +422,14 @@ const MemberTable = ({ data }) => {
                   <Image
                     borderRadius="full"
                     boxSize="150px"
-                    src={"./pic/" + in_MemberID + ".png"}
+                    src={"http://localhost:8000/pic?id=" + in_MemberID}
                     alt={in_FirstName + " " + in_LastName}
                     style={{
                       marginLeft: "auto",
                       marginRight: "auto",
                       display: "block",
                     }}
-                    fallbackSrc="./default.jpg"
+                    fallbackSrc={"http://localhost:8000/pic?id=" + in_MemberID}
                   />
                   <Spacer />
                   <InputGroup size="sm">
@@ -404,7 +439,7 @@ const MemberTable = ({ data }) => {
                       id="memberPicture"
                       name="filename"
                       accept=".png"
-                      onChange={(e) => SetPhoto(e.target.files[0])}
+                      onChange={(e) => SetNewPhoto(e.target.files[0])}
                     />
                   </InputGroup>
                 </Flex>
@@ -415,8 +450,8 @@ const MemberTable = ({ data }) => {
               <AccordionItem>
                 <h2>
                   <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      Personal Infomation Section 1
+                    <Box as="span" flex="1" textAlign="cneter">
+                      Personal Infomation # 1
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
@@ -464,7 +499,7 @@ const MemberTable = ({ data }) => {
                             id="start"
                             name="trip-start"
                             value={in_DOB}
-                            min="1970-01-01"
+                            min="1950-01-01"
                             onChange={(e) => SetDOB(e.target.value)}
                           />
                         </InputGroup>
@@ -486,8 +521,10 @@ const MemberTable = ({ data }) => {
                             type="text"
                             placeholder="Enter"
                             aria-label="Home Addr. L1"
-                            value={in_HomeAdressLine1}
-                            onChange={(e) => SetHomeAdressLine1(e.target.value)}
+                            value={in_HomeAddressLine1}
+                            onChange={(e) =>
+                              SetHomeAddressLine1(e.target.value)
+                            }
                           />
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
@@ -496,8 +533,10 @@ const MemberTable = ({ data }) => {
                             type="text"
                             placeholder="Enter"
                             aria-label="Home Addr. L3"
-                            value={in_HomeAdressLine3}
-                            onChange={(e) => SetHomeAdressLine3(e.target.value)}
+                            value={in_HomeAddressLine3}
+                            onChange={(e) =>
+                              SetHomeAddressLine3(e.target.value)
+                            }
                           />
                         </InputGroup>
                       </Box>
@@ -533,8 +572,8 @@ const MemberTable = ({ data }) => {
                             placeholder="Select"
                             size="md"
                           >
-                            <option value="Male">Mr</option>
-                            <option value="Female">Ms</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
                           </Select>
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
@@ -563,8 +602,10 @@ const MemberTable = ({ data }) => {
                             type="text"
                             placeholder="Enter"
                             aria-label="Home Addr. L2"
-                            value={in_HomeAdressLine2}
-                            onChange={(e) => SetHomeAdressLine2(e.target.value)}
+                            value={in_HomeAddressLine2}
+                            onChange={(e) =>
+                              SetHomeAddressLine2(e.target.value)
+                            }
                           />
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
@@ -573,8 +614,10 @@ const MemberTable = ({ data }) => {
                             type="text"
                             placeholder="Enter"
                             aria-label="Home Addr. L4"
-                            value={in_HomeAdressLine4}
-                            onChange={(e) => SetHomeAdressLine4(e.target.value)}
+                            value={in_HomeAddressLine4}
+                            onChange={(e) =>
+                              SetHomeAddressLine4(e.target.value)
+                            }
                           />
                         </InputGroup>
                       </Box>
@@ -587,8 +630,8 @@ const MemberTable = ({ data }) => {
               <AccordionItem>
                 <h2>
                   <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      Personal Infomation Section 2
+                    <Box as="span" flex="1" textAlign="cneter">
+                      Personal Infomation # 2
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
@@ -615,7 +658,7 @@ const MemberTable = ({ data }) => {
                             aria-label="Office Addr. L1"
                             value={in_OfficeAdressLine1}
                             onChange={(e) =>
-                              SetOfficeAdressLine1(e.target.value)
+                              SetOfficeAddressLine11(e.target.value)
                             }
                           />
                         </InputGroup>
@@ -627,7 +670,7 @@ const MemberTable = ({ data }) => {
                             aria-label="Office Addr. L3"
                             value={in_OfficeAdressLine3}
                             onChange={(e) =>
-                              SetOfficeAdressLine3(e.target.value)
+                              SetOfficeAddressLine13(e.target.value)
                             }
                           />
                         </InputGroup>
@@ -694,7 +737,7 @@ const MemberTable = ({ data }) => {
                             aria-label="Office Addr. L2"
                             value={in_OfficeAdressLine2}
                             onChange={(e) =>
-                              SetOfficeAdressLine2(e.target.value)
+                              SetOfficeAddressLine12(e.target.value)
                             }
                           />
                         </InputGroup>
@@ -706,7 +749,7 @@ const MemberTable = ({ data }) => {
                             aria-label="Office Addr. L4"
                             value={in_OfficeAdressLine4}
                             onChange={(e) =>
-                              SetOfficeAdressLine4(e.target.value)
+                              SetOfficeAddressLine14(e.target.value)
                             }
                           />
                         </InputGroup>
@@ -760,8 +803,8 @@ const MemberTable = ({ data }) => {
               <AccordionItem>
                 <h2>
                   <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      Personal Infomation Section 3
+                    <Box as="span" flex="1" textAlign="cneter">
+                      Personal Infomation # 3
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
@@ -841,8 +884,8 @@ const MemberTable = ({ data }) => {
               <AccordionItem>
                 <h2>
                   <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      JC LOM Info. Section 1
+                    <Box as="span" flex="1" textAlign="cneter">
+                      JC LOM Info. # 1
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
@@ -884,35 +927,41 @@ const MemberTable = ({ data }) => {
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
                           <InputLeftAddon children="Comission TDC" />
-                          <Input
-                            type="text"
-                            placeholder="Enter"
-                            aria-label="Comission TDC"
+                          <Select
                             value={in_ComissionTDC}
                             onChange={(e) => SetComissionTDC(e.target.value)}
-                          />
+                            placeholder="Select"
+                            size="md"
+                          >
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </Select>
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
                           <InputLeftAddon children="Comission Mainland" />
-                          <Input
-                            type="text"
-                            placeholder="Enter"
-                            aria-label="Comission Mainland"
+                          <Select
                             value={in_ComissionMainland}
                             onChange={(e) =>
                               SetComissionMainland(e.target.value)
                             }
-                          />
+                            placeholder="Select"
+                            size="md"
+                          >
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </Select>
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
                           <InputLeftAddon children="Comission NCCC" />
-                          <Input
-                            type="text"
-                            placeholder="Enter"
-                            aria-label="Comission NCCC"
+                          <Select
                             value={in_ComissionNCCC}
                             onChange={(e) => SetComissionNCCC(e.target.value)}
-                          />
+                            placeholder="Select"
+                            size="md"
+                          >
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </Select>
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
                           <InputLeftAddon children="Highest Trainer Status" />
@@ -968,35 +1017,41 @@ const MemberTable = ({ data }) => {
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
                           <InputLeftAddon children="Comission NBN" />
-                          <Input
-                            type="text"
-                            placeholder="Enter"
-                            aria-label="Comission NBN"
+                          <Select
                             value={in_ComissionNBN}
                             onChange={(e) => SetComissionNBN(e.target.value)}
-                          />
+                            placeholder="Select"
+                            size="md"
+                          >
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </Select>
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
                           <InputLeftAddon children="Comission IA" />
-                          <Input
-                            type="text"
-                            placeholder="Enter"
-                            aria-label="Comission IA"
+                          <Select
                             value={in_ComissionIA}
                             onChange={(e) => SetComissionIA(e.target.value)}
-                          />
+                            placeholder="Select"
+                            size="md"
+                          >
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </Select>
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
-                          <InputLeftAddon children="Comission CropComm" />
-                          <Input
-                            type="text"
-                            placeholder="Enter"
-                            aria-label="Comission CropComm"
+                          <InputLeftAddon children="Comission CorpComm" />
+                          <Select
                             value={in_ComissionCorpComm}
                             onChange={(e) =>
                               SetComissionCorpComm(e.target.value)
                             }
-                          />
+                            placeholder="Select"
+                            size="md"
+                          >
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </Select>
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
                           <InputLeftAddon children="Highest Position" />
@@ -1020,8 +1075,8 @@ const MemberTable = ({ data }) => {
               <AccordionItem>
                 <h2>
                   <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      JC LOM Info. Section 2
+                    <Box as="span" flex="1" textAlign="cneter">
+                      JC LOM Info. # 2
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
@@ -1066,23 +1121,27 @@ const MemberTable = ({ data }) => {
                     </InputGroup>
                     <InputGroup size="md" style={{ marginBottom: "5px" }}>
                       <InputLeftAddon children="Mail Opt-out" />
-                      <Input
-                        type="text"
-                        placeholder="Enter"
-                        aria-label="Mail Opt-out"
+                      <Select
                         value={in_MailOptOut}
                         onChange={(e) => SetMailOptOut(e.target.value)}
-                      />
+                        placeholder="Select"
+                        size="md"
+                      >
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </Select>
                     </InputGroup>
                     <InputGroup size="md" style={{ marginBottom: "5px" }}>
                       <InputLeftAddon children="Email Opt-out" />
-                      <Input
-                        type="text"
-                        placeholder="Enter"
-                        aria-label="Email Opt-out"
+                      <Select
                         value={in_EmailOptOut}
                         onChange={(e) => SetEmailOptOut(e.target.value)}
-                      />
+                        placeholder="Select"
+                        size="md"
+                      >
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </Select>
                     </InputGroup>
                   </Box>
                 </AccordionPanel>
@@ -1091,8 +1150,8 @@ const MemberTable = ({ data }) => {
               <AccordionItem>
                 <h2>
                   <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      JC NOM Info. Section 1
+                    <Box as="span" flex="1" textAlign="cneter">
+                      JC NOM Info. # 1
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
@@ -1123,13 +1182,15 @@ const MemberTable = ({ data }) => {
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
                           <InputLeftAddon children="Senator" />
-                          <Input
-                            type="text"
-                            placeholder="Enter"
-                            aria-label="Senator"
+                          <Select
                             value={in_Senator}
                             onChange={(e) => SetSenator(e.target.value)}
-                          />
+                            placeholder="Select"
+                            size="md"
+                          >
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </Select>
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
                           <InputLeftAddon children="HON" />
@@ -1186,13 +1247,15 @@ const MemberTable = ({ data }) => {
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
                           <InputLeftAddon children="PNP" />
-                          <Input
-                            type="text"
-                            placeholder="Enter"
-                            aria-label="PNP"
+                          <Select
                             value={in_PNP}
                             onChange={(e) => SetPNP(e.target.value)}
-                          />
+                            placeholder="Select"
+                            size="md"
+                          >
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </Select>
                         </InputGroup>
                         <InputGroup size="md" style={{ marginBottom: "5px" }}>
                           <InputLeftAddon children="Highest Position" />
@@ -1224,9 +1287,22 @@ const MemberTable = ({ data }) => {
     );
   }
 
-  function ViewMember(memberObj) {
+  function ViewMember({memberObj, memberID}) {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const [in_memberObj, setMemberObj] = useState(memberObj["memberObj"]);
+    const [in_memberObj, setMemberObj] = useState(memberObj);
+    const [in_pic, setPic] = useState("");
+
+    useEffect(() => {
+      var sessionObj = JSON.parse(localStorage.getItem("session"));
+      if (!sessionObj) {
+        window.location.href = "/";
+      } else {
+        if (new Date().getTime() > sessionObj.expire) {
+          localStorage.removeItem("session");
+          window.location.href = "/";
+        }
+      }
+    }, []);
 
     return (
       <>
@@ -1236,7 +1312,10 @@ const MemberTable = ({ data }) => {
         <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>View Member</ModalHeader>
+            <ModalHeader>
+              View Member (
+              {in_memberObj["First Name"] + " " + in_memberObj["Last Name"]})
+            </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <Box maxW="sm" padding="5">
@@ -1249,21 +1328,22 @@ const MemberTable = ({ data }) => {
                   <Image
                     borderRadius="full"
                     boxSize="150px"
-                    src={"./pic/" + in_memberObj["Member ID"] + ".png"}
+                    src={"http://localhost:8000/pic?id=" + in_memberObj["Member ID"]}
                     alt={in_memberObj["First Name"] + in_memberObj["Last Name"]}
                     style={{
                       marginLeft: "auto",
                       marginRight: "auto",
                       display: "block",
                     }}
-                    fallbackSrc="./default.jpg"
+                    fallbackSrc={"http://localhost:8000/pic?id=" + in_memberObj["Member ID"]}
                   />
                   <Spacer />
-                  <p id="nom">{in_memberObj["First Name"]}</p>
-                  <Spacer />
-                  <label htmlFor="nom">_</label>
-                  <Spacer />
-                  <p id="nom">{in_memberObj["Last Name"]}</p>
+                  <h3 style={{ fontSize: "30px" }}>
+                    {in_memberObj["First Name"]}
+                  </h3>
+                  <h3 style={{ fontSize: "30px" }}>
+                    {in_memberObj["Last Name"]}
+                  </h3>
                 </Flex>
               </Box>
               <Box position="relative" padding="5">
@@ -1272,45 +1352,699 @@ const MemberTable = ({ data }) => {
                     <h2>
                       <AccordionButton>
                         <Box as="span" flex="1" textAlign="cneter">
-                          Personal Information
+                          Personal Infomation # 1
                         </Box>
                         <AccordionIcon />
                       </AccordionButton>
                     </h2>
-                    <AccordionPanel pb={10}>
-                      <InputGroup size="md">
-                        <Flex
-                          minWidth="max-content"
-                          alignItems="center"
-                          gap="2"
-                          style={{ margin: "10px" }}
-                        >
-                          <label for="nom">Title: </label>
-                          <Spacer />
-                          <p id="nom">{"in_memberObj['NOM']"}</p>
-                          <Spacer />
-                          <label for="nom">NOM: </label>
-                          <Spacer />
-                          <p id="nom">{in_memberObj["NOM"]}</p>
-                        </Flex>
-                      </InputGroup>
+                    <AccordionPanel pb={4} h={"280px"}>
+                      <Grid templateColumns="repeat(2, 1fr)" gap={2}>
+                        <GridItem w="100%">
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Title: </label>
+                            <p id="nom">{in_memberObj["Title"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Mid Name: </label>
+                            <p id="nom">{in_memberObj["Mid Name"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Chinese Name: </label>
+                            <p id="nom">{in_memberObj["Chinese Name"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Birthday: </label>
+                            <p id="nom">{in_memberObj["DOB"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Marital: </label>
+                            <p id="nom">{in_memberObj["Marital"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Home Addr. L1: </label>
+                            <p id="nom">{in_memberObj["Home Address Line1"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Home Addr. L3: </label>
+                            <p id="nom">{in_memberObj["Home Address Line3"]}</p>
+                          </Flex>
+                          {/* Session Left */}
+                        </GridItem>
+                        <GridItem w="100%">
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">First Name: </label>
+                            <p id="nom">{in_memberObj["First Name"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Last Name: </label>
+                            <p id="nom">{in_memberObj["Last Name"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Gender: </label>
+                            <p id="nom">{in_memberObj["Gender"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">HKID: </label>
+                            <p id="nom">{in_memberObj["HKID"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Mail Addr.: </label>
+                            <p id="nom">{in_memberObj["Mailing Address"]}</p>
+                          </Flex>
+                          {/* Session Right */}
+                        </GridItem>
+                      </Grid>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Home Addr. L2: </label>
+                        <p id="nom">{in_memberObj["Home Address Line2"]}</p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Home Addr. L4: </label>
+                        <p id="nom">{in_memberObj["Home Address Line4"]}</p>
+                      </Flex>
                     </AccordionPanel>
                   </AccordionItem>
 
                   <AccordionItem>
                     <h2>
                       <AccordionButton>
-                        <Box as="span" flex="1" textAlign="left">
-                          Section 2 title
+                        <Box as="span" flex="1" textAlign="cneter">
+                          Personal Infomation # 2
                         </Box>
                         <AccordionIcon />
                       </AccordionButton>
                     </h2>
-                    <AccordionPanel pb={4}>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    <AccordionPanel pb={4} h={"340px"}>
+                      <Grid templateColumns="repeat(2, 1fr)" gap={2}>
+                        <GridItem w="100%">
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Home District: </label>
+                            <p id="nom">{in_memberObj["Home District"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Fax Home: </label>
+                            <p id="nom">{in_memberObj["Fax Home"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Home Tel: </label>
+                            <p id="nom">{in_memberObj["Home Tel"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Company Title: </label>
+                            <p id="nom">{in_memberObj["Company Title"]}</p>
+                          </Flex>
+                          {/* Session Left */}
+                        </GridItem>
+                        <GridItem w="100%">
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Mobile: </label>
+                            <p id="nom">{in_memberObj["Mobile"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Fax Office: </label>
+                            <p id="nom">{in_memberObj["Fax Office"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Industry: </label>
+                            <p id="nom">{in_memberObj["Industry"]}</p>
+                          </Flex>
+                          {/* Session Right */}
+                        </GridItem>
+                      </Grid>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Email 1: </label>
+                        <p id="nom">{in_memberObj["Email 1"]}</p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Email 2: </label>
+                        <p id="nom">{in_memberObj["Email 2"]}</p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Company Name: </label>
+                        <p id="nom">{in_memberObj["Company Name"]}</p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Office Addr. L1: </label>
+                        <p id="nom">{in_memberObj["Office Address Line1"]}</p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Office Addr. L2: </label>
+                        <p id="nom">{in_memberObj["Office Address Line12"]}</p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Office Addr. L3: </label>
+                        <p id="nom">{in_memberObj["Office Address Line13"]}</p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Office Addr. L4: </label>
+                        <p id="nom">{in_memberObj["Office Address Line14"]}</p>
+                      </Flex>
+                    </AccordionPanel>
+                  </AccordionItem>
+
+                  <AccordionItem>
+                    <h2>
+                      <AccordionButton>
+                        <Box as="span" flex="1" textAlign="cneter">
+                          Personal Infomation # 3
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+                    </h2>
+                    <AccordionPanel pb={4} h={"165px"}>
+                      <Grid templateColumns="repeat(2, 1fr)" gap={2}>
+                        <GridItem w="100%">
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Office Tel: </label>
+                            <p id="nom">{in_memberObj["Office Tel"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Company Title: </label>
+                            <p id="nom">{in_memberObj["Company Title"]}</p>
+                          </Flex>
+                          {/* Session Left */}
+                        </GridItem>
+                        <GridItem w="100%">
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Mail Problem: </label>
+                            <p id="nom">{in_memberObj["Mail Problem"]}</p>
+                          </Flex>
+                          {/* Session Right */}
+                        </GridItem>
+                      </Grid>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Company Web Site: </label>
+                        <p id="nom">{in_memberObj["Company Web Site"]}</p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Highest Prof. Qualif.: </label>
+                        <p id="nom">
+                          {in_memberObj["Highest Profressional Qualification"]}
+                        </p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Highest Education: </label>
+                        <p id="nom">{in_memberObj["Highest Education"]}</p>
+                      </Flex>
+                    </AccordionPanel>
+                  </AccordionItem>
+
+                  <AccordionItem>
+                    <h2>
+                      <AccordionButton>
+                        <Box as="span" flex="1" textAlign="cneter">
+                          JC LOM Info. # 1
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+                    </h2>
+                    <AccordionPanel pb={4} h={"250px"}>
+                      <Grid templateColumns="repeat(2, 1fr)" gap={2}>
+                        <GridItem w="100%">
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Member ID: </label>
+                            <p id="nom">{in_memberObj["Member ID"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Senator ID: </label>
+                            <p id="nom">{in_memberObj["Senator ID"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Date Induct: </label>
+                            <p id="nom">{in_memberObj["Date Induct"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Comission TDC: </label>
+                            <p id="nom">{in_memberObj["Comission_TDC"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Comission Mainland: </label>
+                            <p id="nom">{in_memberObj["Comission_Mainland"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">
+                              Highest Trainer Status:{" "}
+                            </label>
+                            <p id="nom">
+                              {in_memberObj["Highest Trainer Status"]}
+                            </p>
+                          </Flex>
+                          {/* Session Left */}
+                        </GridItem>
+                        <GridItem w="100%">
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">LOM Mem. Type: </label>
+                            <p id="nom">{in_memberObj["LOM Member Type"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Date PM: </label>
+                            <p id="nom">{in_memberObj["Date PM"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Comission NBN: </label>
+                            <p id="nom">{in_memberObj["Comission_NBN"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Comission IA: </label>
+                            <p id="nom">{in_memberObj["Comission_IA"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Comission CorpComm: </label>
+                            <p id="nom">{in_memberObj["Comission_CorpComm"]}</p>
+                          </Flex>
+                          {/* Session Right */}
+                        </GridItem>
+                      </Grid>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Current Position: </label>
+                        <p id="nom">{in_memberObj["Current Position"]}</p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Highest Position: </label>
+                        <p id="nom">
+                          {in_memberObj["Highest Position in LOM"]}
+                        </p>
+                      </Flex>
+                    </AccordionPanel>
+                  </AccordionItem>
+
+                  <AccordionItem>
+                    <h2>
+                      <AccordionButton>
+                        <Box as="span" flex="1" textAlign="cneter">
+                          JC LOM Info. # 2
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+                    </h2>
+                    <AccordionPanel pb={4} h={"190px"}>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">
+                          Other Social Involvement 1:{" "}
+                        </label>
+                        <p id="nom">
+                          {in_memberObj["Other Social Involvement 1"]}
+                        </p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">
+                          Other Social Involvement 2:{" "}
+                        </label>
+                        <p id="nom">
+                          {in_memberObj["Other Social Involvement 2"]}
+                        </p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">
+                          Other Social Involvement 3:{" "}
+                        </label>
+                        <p id="nom">
+                          {in_memberObj["Other Social Involvement 3"]}
+                        </p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Mail Opt-out: </label>
+                        <p id="nom">{in_memberObj["Mail Opt-out"]}</p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Email Opt-out: </label>
+                        <p id="nom">{in_memberObj["Email Opt-out"]}</p>
+                      </Flex>
+                      <Flex
+                        minWidth="max-content"
+                        alignItems="center"
+                        gap="2"
+                        style={{ margin: "5px" }}
+                      >
+                        <label htmlFor="nom">Highest Trainer Status: </label>
+                        <p id="nom">{in_memberObj["Highest Trainer Status"]}</p>
+                      </Flex>
+                    </AccordionPanel>
+                  </AccordionItem>
+
+                  <AccordionItem>
+                    <h2>
+                      <AccordionButton>
+                        <Box as="span" flex="1" textAlign="cneter">
+                          JC NOM Info. # 1
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+                    </h2>
+                    <AccordionPanel pb={4} h={"165px"}>
+                      <Grid templateColumns="repeat(2, 1fr)" gap={2}>
+                        <GridItem w="100%">
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">NOM: </label>
+                            <p id="nom">{in_memberObj["NOM"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">NOM ID: </label>
+                            <p id="nom">{in_memberObj["NOM ID"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Senator: </label>
+                            <p id="nom">{in_memberObj["Senator"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">HON: </label>
+                            <p id="nom">{in_memberObj["HON"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">
+                              Print on JCIHK Directory:{" "}
+                            </label>
+                            <p id="nom">
+                              {in_memberObj["Print on JCIHK Directory"]}
+                            </p>
+                          </Flex>
+                          {/* Session Left */}
+                        </GridItem>
+                        <GridItem w="100%">
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">NOM Code: </label>
+                            <p id="nom">{in_memberObj["NOM Code"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">NOM Mem. Type: </label>
+                            <p id="nom">{in_memberObj["NOM Member Type"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">PNP: </label>
+                            <p id="nom">{in_memberObj["PNP"]}</p>
+                          </Flex>
+                          <Flex
+                            minWidth="max-content"
+                            alignItems="center"
+                            gap="2"
+                            style={{ margin: "5px" }}
+                          >
+                            <label htmlFor="nom">Highest Position: </label>
+                            <p id="nom">{in_memberObj["Highest Position"]}</p>
+                          </Flex>
+                          {/* Session Right */}
+                        </GridItem>
+                      </Grid>
                     </AccordionPanel>
                   </AccordionItem>
                 </Accordion>
@@ -1331,7 +2065,6 @@ const MemberTable = ({ data }) => {
         result = data[i];
       }
     }
-    console.log(result);
     return result;
   }
 
@@ -1366,10 +2099,14 @@ const MemberTable = ({ data }) => {
                   <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                 ))}
                 <td>
-                  <ViewMember memberObj={select_member(row.values)} />
+                  <ViewMember
+                    memberObj={select_member(row.values)}
+                    memberID={select_member(row.values)["id"]}
+                  />
                 </td>
                 <td>
                   <UpdateMember
+                    ID={select_member(row.values)["id"]}
                     NOM={select_member(row.values)["NOM"]}
                     MemberID={select_member(row.values)["Member ID"]}
                     FirstName={select_member(row.values)["First Name"]}
@@ -1400,17 +2137,17 @@ const MemberTable = ({ data }) => {
                     MailingProblem={
                       select_member(row.values)["Mailing Problem"]
                     }
-                    HomeAdressLine1={
-                      select_member(row.values)["Home Adress Line1"]
+                    HomeAddressLine1={
+                      select_member(row.values)["Home Address Line1"]
                     }
-                    HomeAdressLine2={
-                      select_member(row.values)["Home Adress Line2"]
+                    HomeAddressLine2={
+                      select_member(row.values)["Home Address Line2"]
                     }
-                    HomeAdressLine3={
-                      select_member(row.values)["Home Adress Line3"]
+                    HomeAddressLine3={
+                      select_member(row.values)["Home Address Line3"]
                     }
-                    HomeAdressLine4={
-                      select_member(row.values)["Home Adress Line4"]
+                    HomeAddressLine4={
+                      select_member(row.values)["Home Address Line4"]
                     }
                     HomeDistrict={select_member(row.values)["Home District"]}
                     OfficeAddressLine1={
